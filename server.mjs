@@ -79,7 +79,7 @@ function limited(ip) {
 function call(model, body) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
   return new Promise((resolve, reject) => {
-    const p = spawn('curl', ['-sS', '--max-time', '12', '-K', '-', '--data-binary', body]);
+    const p = spawn('curl', ['-sS', '--max-time', '10', '-K', '-', '--data-binary', body]);
     let out = '', err = '';
     p.stdout.on('data', (d) => { out += d; });
     p.stderr.on('data', (d) => { err += d; });
@@ -91,7 +91,9 @@ function call(model, body) {
         if (r.error) return reject(Object.assign(new Error(`${model}: ${r.error.code}: ${r.error.message}`), { retry: [404, 429, 500, 503].includes(r.error.code) }));
         const parsed = JSON.parse(r.candidates?.[0]?.content?.parts?.[0]?.text ?? '{}');
         const ids = [...new Set(parsed.ids ?? [])].filter((id) => IDS.includes(id)).slice(0, 3);
-        resolve({ ids, reason: String(parsed.reason ?? '').slice(0, 300), model });
+        // Типографика интерфейса: без длинных тире и ёлочек.
+        const reason = String(parsed.reason ?? '').replace(/[\u2013\u2014]/g, '-').replace(/[\u00ab\u00bb\u201c\u201d\u201e]/g, '"').slice(0, 300);
+        resolve({ ids, reason, model });
       } catch (e) {
         reject(new Error(`${model}: ответ не разобран: ${e.message}`));
       }
@@ -106,15 +108,21 @@ async function gemini(text) {
     contents: [{ role: 'user', parts: [{ text: `Фраза: ${text}` }] }],
     generationConfig: { responseMimeType: 'application/json', responseSchema: SCHEMA, temperature: 0.2 },
   });
-  for (const [i, model] of MODELS.entries()) {
+  const now = Date.now();
+  const ready = MODELS.filter((m) => !(resting.get(m) > now));
+  if (!ready.length) throw new Error('все модели на паузе после квоты');
+  for (const [i, model] of ready.entries()) {
     try {
       return await call(model, body);
     } catch (e) {
-      if (!e.retry || i === MODELS.length - 1) throw e;
-      console.error(new Date().toISOString(), e.message, '-> следующая модель');
+      // Квота (429) и снятая модель (404) за минуты не пройдут: модель отдыхает час.
+      if (/: (404|429):/.test(e.message)) resting.set(model, now + 3600_000);
+      if (!e.retry || i === ready.length - 1) throw e;
+      console.error(new Date().toISOString(), e.message.slice(0, 200), '-> следующая модель');
     }
   }
 }
+const resting = new Map();
 
 async function metaphor(req, res) {
   const json = (code, data) => res.writeHead(code, { 'content-type': 'application/json; charset=utf-8' }).end(JSON.stringify(data));
