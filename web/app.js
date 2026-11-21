@@ -381,6 +381,8 @@ pf.oninput = (e) => {
   painting = true;
   requestAnimationFrame(() => {
     painting = false;
+    // Шаблоны ещё грузятся после смены холста: нарисует render(), который их ждёт.
+    if (neededFiles().some((f) => !templates.has(f))) return;
     $('#stage').innerHTML = C.buildSvg(state, colors(), (f) => templates.get(f), manifest);
     frame();
   });

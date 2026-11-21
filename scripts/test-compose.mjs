@@ -62,6 +62,15 @@ for (const fmt of manifest.formats) for (const ids of [['phone', 'wallet', 'lamp
   assert.deepEqual([lamp.state, lamp.x, lamp.y], ['background', src.x, src.y], `${ids} ${fmt}`);
   assert(res.objects.some((o) => o.state === 'main'), `${ids} ${fmt}: нет главного`);
 }
+// Ни лампа, ни ваза не встают в чужое место: только туда, где стоят в примере этого формата.
+for (const fmt of manifest.formats) for (const ids of [['vase', 'lamp', 'pen'], ['lamp', 'vase', 'coin'], ['pen', 'vase', 'lamp']]) {
+  const res = C.compose(ids, fmt, manifest, layouts);
+  const homes = layouts.filter((l) => l.format.join() === fmt.join()).flatMap((l) => l.objects);
+  for (const o of res.objects.filter((x) => ['lamp', 'vase'].includes(x.id))) {
+    assert(homes.some((h) => h.id === o.id && h.x === o.x && h.y === o.y), `${ids} ${fmt}: ${o.id} в чужом месте`);
+  }
+  assert.equal(res.objects.length + res.dropped.length, 3, `${ids} ${fmt}`);
+}
 
 // Перекраска не даёт объектный цвет фоновому объекту.
 assert.throws(() => C.paint('{bg1}', C.rolesOf(palettes.schemes[0], palettes), { bg1: 'obj1' }, true));

@@ -151,8 +151,15 @@ export function compose(ids, format, manifest, layouts) {
     })];
     return { l, objects, misfit, overlap: used.length - rest.length };
   };
-  const best = inFormat.filter((l) => l.objects.length >= used.filter((id) => !own(id) || l.objects.some((o) => o.id === id)).length).map(plan)
+  // Остальные такие объекты в чужое место тоже не встают: годится только пример, где они есть сами.
+  const extra = bgOnly.slice(1);
+  const best = inFormat.filter((l) => l.objects.length >= used.filter((id) => !own(id) || l.objects.some((o) => o.id === id)).length)
+    .filter((l) => extra.every((id) => l.objects.some((o) => o.id === id))).map(plan)
     .sort((a, b) => b.overlap - a.overlap || a.misfit - b.misfit || a.l.objects.length - b.l.objects.length)[0];
+  if (!best) {
+    const rest = compose(used.filter((id) => !extra.includes(id)), format, manifest, layouts);
+    return { ...rest, dropped: [...extra, ...dropped] };
+  }
   const { l: base, objects } = best;
   // Без главного объекта композиции нет (лампа и ваза вдвоём): незакреплённые становятся главными.
   if (objects.every((o) => o.state === 'background')) objects.forEach((o) => { if (!pin.includes(o.id)) o.state = 'main'; });
