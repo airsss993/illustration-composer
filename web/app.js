@@ -95,7 +95,7 @@ async function askModel(q) {
   try {
     const r = await fetch('../api/metaphor', {
       method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ q }), signal: AbortSignal.timeout(25000),
+      body: JSON.stringify({ q }), signal: AbortSignal.timeout(40000),
     });
     const data = r.ok ? await r.json() : null;
     return data?.ids?.length ? data : null;
