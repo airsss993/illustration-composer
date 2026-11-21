@@ -14,7 +14,7 @@ const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.json': 'applic
 const ALLOWED = ['web', 'library', 'examples'];
 
 const KEY = process.env.GEMINI_API_KEY;
-const MODEL = process.env.GEMINI_MODEL ?? 'gemini-2.5-flash';
+const MODEL = process.env.GEMINI_MODEL ?? 'gemini-3.8-flash';
 const OBJECTS = JSON.parse(readFileSync(join(ROOT, 'library/manifest.json'), 'utf8')).objects
   .filter((o) => o.size === 'L').map((o) => ({ id: o.id, names: o.names }));
 const IDS = OBJECTS.map((o) => o.id);

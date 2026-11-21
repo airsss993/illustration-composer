@@ -17,7 +17,7 @@ node server.mjs
 Открыть http://localhost:8080. Порт меняется аргументом: `node server.mjs 3000`.
 
 Сценарий 1 разбирает модель Gemini, если задан ключ: `GEMINI_API_KEY=... node server.mjs`.
-Модель меняется через `GEMINI_MODEL` (по умолчанию `gemini-2.5-flash`). Запросы к Gemini идут
+Модель меняется через `GEMINI_MODEL` (по умолчанию `gemini-3.8-flash`). Запросы к Gemini идут
 через `curl`, поэтому прокси задаётся его переменной `ALL_PROXY` (например `socks5h://host:port`).
 Без ключа фразу разбирает локальный словарь ассоциаций.
 
