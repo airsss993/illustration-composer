@@ -43,6 +43,8 @@ input[type=range] { padding: 0; background: transparent; accent-color: var(--ink
 button { cursor: pointer; }
 input, select, button, .upload, .lib svg { transition: background-color .18s ease, color .18s ease, box-shadow .18s ease, border-color .18s ease, transform .18s ease, opacity .18s ease, filter .18s ease; }
 button:active:not(:disabled) { transform: scale(.97); }
+/* Двойной клик по кнопке не должен выделять её подпись и текст рядом. */
+button, summary, .upload { -webkit-user-select: none; user-select: none; }
 .lib button:hover svg { transform: scale(1.08); }
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } }
 #status { animation: rise .28s ease-out; }
@@ -69,6 +71,9 @@ button:disabled { opacity: .45; cursor: default; }
 .pick button { display: grid; justify-items: center; gap: 6px; flex: 1 1 0; padding: 10px 4px; white-space: nowrap; border-radius: var(--r-sm); background: transparent; font-weight: 500; color: var(--ink-2); }
 .pick button:hover { background: var(--fill-2); }
 .pick button[aria-pressed=true] { background: var(--ink); color: #fff; }
+/* Схем бывает больше трёх (свои): переносятся по три в ряд, длинное имя обрезается. */
+#scheme { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+#scheme button span.nm { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 .ratio { display: block; height: 26px; border: 1.5px solid currentColor; border-radius: 4px; }
 .dots { display: flex; }
 .dots i { width: 18px; height: 18px; border-radius: 50%; box-shadow: 0 0 0 2px var(--fill); }

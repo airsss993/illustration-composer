@@ -63,7 +63,9 @@ addEventListener('resize', frame);
 
 const calm = matchMedia('(prefers-reduced-motion: reduce)');
 const fadeIn = (el, from = {}) => el && !calm.matches
-  && el.animate([{ opacity: 0, ...from }, { opacity: 1, transform: 'none' }], { duration: 320, easing: 'cubic-bezier(.2,.7,.3,1)' });
+  // transform в конечном кадре только если его анимируют: у группы объекта CSS transform перекрыл бы
+  // SVG-атрибут с позицией, и объект на время анимации уезжал бы в угол холста.
+  && el.animate([{ opacity: 0, ...from }, { opacity: 1, ...(from.transform && { transform: 'none' }) }], { duration: 320, easing: 'cubic-bezier(.2,.7,.3,1)' });
 
 function say(text, isError = false) {
   const st = $('#status');
@@ -296,7 +298,7 @@ $('#background').onchange = (e) => { state.background = e.target.value; render()
 // Кружки схемы: светлый и тёмный фоновый, главный объектный цвет.
 function fillSchemes() {
   $('#scheme').innerHTML = palettes.schemes.map((s) =>
-    `<button type="button" data-v="${s.id}"><span class="dots">${[s.background[0], s.background[2], s.object[1]].map((c) => `<i style="background:${c}"></i>`).join('')}</span>${s.id}</button>`).join('');
+    `<button type="button" data-v="${s.id}" title="${s.id}"><span class="dots">${[s.background[0], s.background[2], s.object[1]].map((c) => `<i style="background:${c}"></i>`).join('')}</span><span class="nm">${s.id}</span></button>`).join('');
 }
 fillSchemes();
 $('#scheme').onclick = (e) => {
@@ -316,6 +318,8 @@ const readDraft = () => ({
   object: swatches('object').map((i) => i.value.toUpperCase()),
 });
 const redraw = () => { render(); renderLib(); };
+// Двойной клик по summary иначе выделяет текст открытой формы под ним.
+$('#custom > summary').onmousedown = (e) => { if (e.detail > 1) e.preventDefault(); };
 $('#custom').ontoggle = () => {
   if (!$('#custom').open) { if (draft) { draft = null; redraw(); } return; }
   const s = scheme();
