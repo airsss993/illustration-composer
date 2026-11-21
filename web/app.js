@@ -90,9 +90,29 @@ function apply(ids, how) {
   render();
 }
 
-$('#byMetaphor').onsubmit = (e) => {
+// Сначала модель на сервере, при любой ошибке (статический хостинг, нет ключа, лимит) - словарь.
+async function askModel(q) {
+  try {
+    const r = await fetch('../api/metaphor', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ q }), signal: AbortSignal.timeout(25000),
+    });
+    const data = r.ok ? await r.json() : null;
+    return data?.ids?.length ? data : null;
+  } catch {
+    return null;
+  }
+}
+$('#byMetaphor').onsubmit = async (e) => {
   e.preventDefault();
-  apply(C.parseMetaphor(e.target.q.value), 'metaphor');
+  const q = e.target.q.value, button = e.target.querySelector('button');
+  button.disabled = true;
+  say('Подбираю объекты...');
+  const ai = await askModel(q);
+  button.disabled = false;
+  apply(ai?.ids ?? C.parseMetaphor(q), 'metaphor');
+  if (ai) say(`${$('#status').textContent} Gemini: ${ai.reason}`);
+  else if ($('#status').textContent.startsWith('Собрано')) say(`${$('#status').textContent} Разбор словарём.`);
 };
 $('#byNames').onsubmit = (e) => {
   e.preventDefault();
