@@ -74,6 +74,7 @@ assert.equal(C.parsePalette({ schemes: [ok, { ...ok, id: 'sea2' }] }).length, 2)
 assert.throws(() => C.parsePalette({ ...ok, object: ['#DDEEFF', '#FF8866', '#FFDDCC'] }), /и в фоне, и в объектах/);
 assert.throws(() => C.parsePalette({ ...ok, background: ['#DDEEFF'] }), /ровно 3/);
 assert.throws(() => C.parsePalette(ok, ['sea']), /уже есть/);
+assert.throws(() => C.parsePalette({ ...ok, id: 'a<b' }), /id - до 32/);
 
 // L -> S -> L возвращает центр с точностью до округления.
 const inst = { id: 'vase', state: 'main', x: 100, y: 200, rotation: 0 };

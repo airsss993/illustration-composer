@@ -26,8 +26,15 @@ const objOf = (inst, size = state.size) => manifest.objects.find((o) => o.size =
 const colors = () => C.rolesOf(palettes.schemes.find((s) => s.id === state.scheme), palettes);
 const k = () => C.SIZE_SCALE[state.size];
 
+const calm = matchMedia('(prefers-reduced-motion: reduce)');
+const fadeIn = (el, from = {}) => el && !calm.matches
+  && el.animate([{ opacity: 0, ...from }, { opacity: 1, transform: 'none' }], { duration: 320, easing: 'cubic-bezier(.2,.7,.3,1)' });
+
 function say(text, isError = false) {
-  $('#status').textContent = text;
+  const st = $('#status');
+  // Перезапуск появления: новое сообщение заметно, даже если плашка уже была на экране.
+  st.style.animation = 'none'; st.offsetWidth; st.style.animation = '';
+  st.textContent = text;
   $('#status').classList.toggle('err', isError);
 }
 
@@ -45,7 +52,12 @@ async function render() {
   if (neededFiles().some((f) => !templates.has(f))) return;
   $('#stage').innerHTML = C.buildSvg(state, colors(), (f) => templates.get(f), manifest, { selected });
   const [W, H] = state.format.map((v) => Math.round(v * k()));
-  $('#info').textContent = `${W} x ${H} · ${state.scheme} · набор ${state.size} · объектов ${state.objects.length}`;
+  const s = palettes.schemes.find((x) => x.id === state.scheme);
+  const n = state.objects.length;
+  const word = n % 10 === 1 && n % 100 !== 11 ? 'объект' : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'объекта' : 'объектов';
+  const dots = [s.background[0], s.background[2], s.object[1]].map((c) => `<i style="background:${c}"></i>`).join('');
+  $('#info').innerHTML = `<li><b>${W} x ${H}</b> px</li><li><span class="dots">${dots}</span><b>${s.id[0].toUpperCase() + s.id.slice(1)}</b></li>`
+    + `<li>Набор <b>${state.size}</b></li><li><b>${n}</b> ${word}</li>`;
 
   $('#layers').innerHTML = '';
   [...state.objects.keys()].reverse().forEach((i) => {
@@ -59,6 +71,10 @@ async function render() {
     li.append(b);
     $('#layers').append(li);
   });
+  const pressed = (box, v) => box.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.v === v));
+  pressed($('#format'), state.format.join('x'));
+  pressed($('#scheme'), state.scheme);
+  syncDropdowns.forEach((sync) => sync());
   $('#selected').disabled = selected < 0;
   if (selected >= 0) {
     $('#rotation').value = state.objects[selected].rotation;
@@ -69,7 +85,7 @@ async function render() {
 
 function select(i) {
   selected = i;
-  render();
+  return render();
 }
 
 function apply(ids, how) {
@@ -87,7 +103,7 @@ function apply(ids, how) {
   const names = ids.slice(0, 3).map((id) => objOf({ id }).names[0]).join(', ');
   const base = res.template ? `раскладка по примеру ${res.template.replace('svg/', '')}` : 'объект по центру';
   say(`Собрано: ${names}; ${base}.${res.dropped?.length ? ` Не поместились: ${res.dropped.join(', ')}, добавьте вручную.` : ''}`);
-  render();
+  render().then(() => fadeIn($('#stage svg'), { transform: 'scale(.98)' }));
 }
 
 // Сначала модель на сервере, при любой ошибке (статический хостинг, нет ключа, лимит) - словарь.
@@ -122,9 +138,12 @@ $('#byNames').onsubmit = (e) => {
 };
 
 // Холст
-$('#format').innerHTML = manifest.formats.map((f) => `<option value="${f.join('x')}">${f.join(' x ')}</option>`).join('');
-$('#format').onchange = (e) => {
-  const next = e.target.value.split('x').map(Number);
+$('#format').innerHTML = manifest.formats.map(([w, h]) =>
+  `<button type="button" data-v="${w}x${h}"><span class="ratio" style="aspect-ratio:${w}/${h}"></span>${w} x ${h}</button>`).join('');
+$('#format').onclick = (e) => {
+  const v = e.target.closest('button')?.dataset.v;
+  if (!v || v === state.format.join('x')) return;
+  const next = v.split('x').map(Number);
   // Объекты остаются на своих местах относительно центра холста.
   const dx = Math.round(((next[0] - state.format[0]) / 2) * k());
   const dy = Math.round(((next[1] - state.format[1]) / 2) * k());
@@ -132,6 +151,57 @@ $('#format').onchange = (e) => {
   state.format = next;
   render();
 };
+// Свой список поверх скрытого select: системное меню не стилизуется. Значение и change остаются у select.
+function dropdown(sel) {
+  const wrap = document.createElement('div');
+  const btn = document.createElement('button');
+  const list = document.createElement('ul');
+  wrap.className = 'dd';
+  btn.type = 'button';
+  btn.setAttribute('aria-haspopup', 'listbox');
+  list.setAttribute('role', 'listbox');
+  list.setAttribute('aria-label', sel.getAttribute('aria-label'));
+  list.innerHTML = [...sel.options].map((o) => `<li role="option" tabindex="-1" data-v="${o.value}">${o.text}</li>`).join('');
+  const sync = () => {
+    btn.textContent = sel.selectedOptions[0].text;
+    btn.setAttribute('aria-label', `${sel.getAttribute('aria-label')}: ${btn.textContent}`);
+    for (const li of list.children) li.setAttribute('aria-selected', li.dataset.v === sel.value);
+  };
+  const open = (on) => {
+    list.hidden = !on;
+    btn.setAttribute('aria-expanded', on);
+    if (on) list.querySelector('[aria-selected=true]').focus();
+  };
+  const pick = (v) => {
+    open(false);
+    btn.focus();
+    if (v === sel.value) return;
+    sel.value = v;
+    sync();
+    sel.dispatchEvent(new Event('change'));
+  };
+  btn.onclick = () => open(list.hidden);
+  btn.onkeydown = (e) => { if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); open(true); } };
+  list.onclick = (e) => { const li = e.target.closest('li'); if (li) pick(li.dataset.v); };
+  list.onkeydown = (e) => {
+    const items = [...list.children], i = items.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      items[(i + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length].focus();
+    } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(items[i].dataset.v); }
+    else if (e.key === 'Escape') { open(false); btn.focus(); }
+    else if (e.key === 'Tab') open(false);
+  };
+  document.addEventListener('pointerdown', (e) => { if (!list.hidden && !wrap.contains(e.target)) open(false); });
+  sel.hidden = true;
+  wrap.append(btn, list);
+  sel.after(wrap);
+  open(false);
+  sync();
+  return sync;
+}
+const syncDropdowns = [dropdown($('#size')), dropdown($('#background'))];
+
 $('#size').onchange = (e) => {
   state.objects = state.objects.map((o) => C.resize(o, state.size, e.target.value, manifest));
   state.size = e.target.value;
@@ -139,12 +209,19 @@ $('#size').onchange = (e) => {
 };
 $('#background').onchange = (e) => { state.background = e.target.value; render(); };
 
+// Кружки схемы: светлый и тёмный фоновый, главный объектный цвет.
 function fillSchemes() {
-  $('#scheme').innerHTML = palettes.schemes.map((s) => `<option value="${s.id}">${s.id}</option>`).join('');
-  $('#scheme').value = state.scheme;
+  $('#scheme').innerHTML = palettes.schemes.map((s) =>
+    `<button type="button" data-v="${s.id}"><span class="dots">${[s.background[0], s.background[2], s.object[1]].map((c) => `<i style="background:${c}"></i>`).join('')}</span>${s.id}</button>`).join('');
 }
 fillSchemes();
-$('#scheme').onchange = (e) => { state.scheme = e.target.value; render(); renderLib(); };
+$('#scheme').onclick = (e) => {
+  const v = e.target.closest('button')?.dataset.v;
+  if (!v || v === state.scheme) return;
+  state.scheme = v;
+  render();
+  renderLib();
+};
 $('#palette').onchange = async (e) => {
   const file = e.target.files[0];
   e.target.value = '';
@@ -177,7 +254,8 @@ async function renderLib() {
       const s = objOf(o);
       const [W, H] = state.format.map((v) => v * k());
       state.objects.push({ id: o.id, state: 'main', rotation: 0, x: Math.round((W - s.width) / 2), y: Math.round((H - s.height) / 2) });
-      select(state.objects.length - 1);
+      const i = state.objects.length - 1;
+      select(i).then(() => fadeIn($(`#stage g[data-i="${i}"]`)));
     };
     $('#lib').append(b);
   }
@@ -217,7 +295,7 @@ $('#rotation').oninput = (e) => {
   render();
 };
 document.addEventListener('keydown', (e) => {
-  if (selected < 0 || e.target.matches?.('input, select')) return;
+  if (selected < 0 || e.target.matches?.('input, select, [role=option]')) return;
   if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); actions.del(); render(); }
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'd') { e.preventDefault(); actions.dup(state.objects[selected]); render(); }
 });
@@ -234,6 +312,14 @@ $('#stage').addEventListener('pointerdown', (e) => {
   const p = toSvg(svg, e);
   drag = { i, g, svg, dx: p.x - state.objects[i].x, dy: p.y - state.objects[i].y, moved: false };
   $('#stage').setPointerCapture(e.pointerId);
+  // Выделять сразу при нажатии, а не после отпускания. render заменяет svg, поэтому ссылки для переноса берём заново.
+  if (i !== selected) {
+    select(i).then(() => {
+      if (drag?.i !== i) return;
+      drag.svg = $('#stage svg');
+      drag.g = $(`#stage g[data-i="${i}"]`);
+    });
+  }
 });
 $('#stage').addEventListener('pointermove', (e) => {
   if (!drag) return;

@@ -43,7 +43,8 @@ export function parsePalette(json, existingIds = []) {
   const hex = /^#[0-9a-fA-F]{6}$/;
   return list.map((s, n) => {
     const where = `схема ${s?.id ?? n + 1}`;
-    if (!s || typeof s.id !== 'string' || !s.id.trim()) throw new Error(`${where}: нет id`);
+    // id попадает в разметку интерфейса: только буквы, цифры, дефис и подчёркивание.
+    if (!s || typeof s.id !== 'string' || !/^[\p{L}\d_-]{1,32}$/u.test(s.id)) throw new Error(`${where}: id - до 32 букв, цифр, - или _`);
     for (const k of ['background', 'object']) {
       if (!Array.isArray(s[k]) || s[k].length !== 3 || !s[k].every((c) => hex.test(c))) {
         throw new Error(`${where}: ${k} - ровно 3 цвета вида #RRGGBB`);
@@ -153,6 +154,11 @@ export function buildSvg(state, colors, getTemplate, manifest, { selected = -1 }
   const k = SIZE_SCALE[state.size];
   const [W, H] = state.format.map((v) => Math.round(v * k));
   const parts = [`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" fill="none">`];
+  if (selected >= 0) {
+    parts.push(`<defs><filter id="sel" x="-5%" y="-5%" width="110%" height="110%"><feMorphology in="SourceAlpha" operator="dilate" radius="${Math.round(6 * k)}" result="d"/>`
+      + '<feFlood flood-color="#7864D7"/><feComposite operator="in" in2="d" result="o"/>'
+      + '<feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>');
+  }
   if (state.background !== 'none') {
     const bg = manifest.backgrounds.find((b) => b.kind === state.background && b.format.join() === state.format.join());
     const body = paint(getTemplate(bg.file), colors, {}, true);
@@ -166,10 +172,9 @@ export function buildSvg(state, colors, getTemplate, manifest, { selected = -1 }
     const body = paint(getTemplate(st.file), colors, inst.recolor, inst.state === 'background');
     count[inst.id] = (count[inst.id] ?? 0) + 1;
     const rot = inst.rotation ? ` rotate(${inst.rotation} ${w / 2} ${h / 2})` : '';
-    const sel = i === selected
-      ? `<rect class="sel" x="-4" y="-4" width="${w + 8}" height="${h + 8}" fill="none" stroke="#FF5A1F" stroke-width="3" stroke-dasharray="10 6" vector-effect="non-scaling-stroke"/>`
-      : '';
-    parts.push(`<g id="${inst.id}-${count[inst.id]}" data-i="${i}" transform="translate(${inst.x} ${inst.y})${rot}">${body}${sel}</g>`);
+    // Выделение - обводка по силуэту: прямоугольник у изометрических объектов задевает соседей.
+    const sel = i === selected ? ' filter="url(#sel)"' : '';
+    parts.push(`<g id="${inst.id}-${count[inst.id]}" data-i="${i}" transform="translate(${inst.x} ${inst.y})${rot}"${sel}>${body}</g>`);
   });
   parts.push('</svg>');
   return parts.join('\n');
