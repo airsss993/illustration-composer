@@ -7,13 +7,13 @@ const getJSON = async (url) => {
   return r.json();
 };
 const [manifest, palettes, { layouts }] = await Promise.all([
-  getJSON('/library/manifest.json'), getJSON('/library/palettes.json'), getJSON('/examples/layouts.json'),
+  getJSON('../library/manifest.json'), getJSON('../library/palettes.json'), getJSON('../examples/layouts.json'),
 ]);
 
 const templates = new Map();
 async function load(files) {
   await Promise.all(files.filter((f) => !templates.has(f)).map(async (f) => {
-    const r = await fetch(`/library/${f}`);
+    const r = await fetch(`../library/${f}`);
     if (!r.ok) throw new Error(`${f}: ${r.status}`);
     templates.set(f, C.toTemplate(await r.text(), palettes, manifest.sourceScheme));
   }));
