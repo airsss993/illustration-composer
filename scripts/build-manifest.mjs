@@ -4,6 +4,7 @@ import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
+import { rolesOf } from '../web/compose.js';
 
 const LIB = join(dirname(fileURLToPath(import.meta.url)), '..', 'library');
 const palettes = JSON.parse(readFileSync(join(LIB, 'palettes.json'), 'utf8'));
@@ -16,16 +17,10 @@ const NAMES = {
 };
 
 // Объекты нарисованы только в lilac, поэтому роль цвета определяется по его hex в lilac.
-export function rolesOf(scheme) {
-  const r = { ink: palettes.ink, white: palettes.white };
-  scheme.background.forEach((c, i) => { r[`bg${i + 1}`] = c; });
-  scheme.object.forEach((c, i) => { r[`obj${i + 1}`] = c; });
-  return r;
-}
 function roleIndex(schemeId) {
   const scheme = palettes.schemes.find((s) => s.id === schemeId);
   assert(scheme, `нет схемы ${schemeId}`);
-  const idx = Object.fromEntries(Object.entries(rolesOf(scheme)).map(([role, hex]) => [hex.toUpperCase(), role]));
+  const idx = Object.fromEntries(Object.entries(rolesOf(scheme, palettes)).map(([role, hex]) => [hex.toUpperCase(), role]));
   idx.WHITE = 'white';
   return idx;
 }
