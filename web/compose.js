@@ -149,16 +149,11 @@ export function compose(ids, format, manifest, layouts) {
 export const SIZE_SCALE = { L: 1, S: 0.5 };
 
 // Итоговый SVG. Каждый экземпляр - отдельная группа с id и transform, пути библиотеки как есть.
-// state: { format, size, background, objects: [{ id, state, x, y, rotation, recolor }] }, x/y в пикселях холста.
-export function buildSvg(state, colors, getTemplate, manifest, { selected = -1 } = {}) {
+// state: { format, size, background, objects: [{ id, state, x, y, rotation, recolor, hidden }] }, x/y в пикселях холста.
+export function buildSvg(state, colors, getTemplate, manifest) {
   const k = SIZE_SCALE[state.size];
   const [W, H] = state.format.map((v) => Math.round(v * k));
   const parts = [`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" fill="none">`];
-  if (selected >= 0) {
-    parts.push(`<defs><filter id="sel" x="-5%" y="-5%" width="110%" height="110%"><feMorphology in="SourceAlpha" operator="dilate" radius="${Math.round(6 * k)}" result="d"/>`
-      + '<feFlood flood-color="#7864D7"/><feComposite operator="in" in2="d" result="o"/>'
-      + '<feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>');
-  }
   if (state.background !== 'none') {
     const bg = manifest.backgrounds.find((b) => b.kind === state.background && b.format.join() === state.format.join());
     const body = paint(getTemplate(bg.file), colors, {}, true);
@@ -166,15 +161,14 @@ export function buildSvg(state, colors, getTemplate, manifest, { selected = -1 }
   }
   const count = {};
   state.objects.forEach((inst, i) => {
+    if (inst.hidden) return;
     const o = manifest.objects.find((x) => x.size === state.size && x.id === inst.id);
     const st = o.states[inst.state];
     const [w, h] = [st.width ?? o.width, st.height ?? o.height];
     const body = paint(getTemplate(st.file), colors, inst.recolor, inst.state === 'background');
     count[inst.id] = (count[inst.id] ?? 0) + 1;
     const rot = inst.rotation ? ` rotate(${inst.rotation} ${w / 2} ${h / 2})` : '';
-    // Выделение - обводка по силуэту: прямоугольник у изометрических объектов задевает соседей.
-    const sel = i === selected ? ' filter="url(#sel)"' : '';
-    parts.push(`<g id="${inst.id}-${count[inst.id]}" data-i="${i}" transform="translate(${inst.x} ${inst.y})${rot}"${sel}>${body}</g>`);
+    parts.push(`<g id="${inst.id}-${count[inst.id]}" data-i="${i}" transform="translate(${inst.x} ${inst.y})${rot}">${body}</g>`);
   });
   parts.push('</svg>');
   return parts.join('\n');

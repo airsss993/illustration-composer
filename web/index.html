@@ -44,7 +44,7 @@ input, select, button, .upload, .lib svg { transition: background-color .18s eas
 button:active:not(:disabled) { transform: scale(.97); }
 .lib button:hover svg { transform: scale(1.08); }
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } }
-#status, #selected { animation: rise .28s ease-out; }
+#status { animation: rise .28s ease-out; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
 /* Цвет под градиентом: без него на hover кнопка на миг становится прозрачной. */
 button.main { background: var(--accent) linear-gradient(90deg, var(--accent), var(--accent-2)); color: #fff; font-weight: 600; padding: 9px 18px; }
@@ -75,6 +75,16 @@ button:disabled { opacity: .45; cursor: default; }
 .dots i + i { margin-left: -5px; }
 .upload { position: relative; display: grid; place-items: center; padding: 9px; border: 1.5px dashed var(--dot); border-radius: var(--pill); font-size: 15px; color: var(--label); cursor: pointer; }
 .upload:hover { border-color: var(--accent); color: var(--accent); }
+summary.upload { list-style: none; }
+summary.upload::-webkit-details-marker { display: none; }
+details[open] > summary.upload { border-style: solid; border-color: var(--fill-2); color: var(--ink); }
+#paletteForm { display: grid; gap: 12px; margin-top: 12px; }
+.sw { display: flex; gap: 6px; }
+.sw input { flex: 1 1 0; height: 38px; padding: 4px; cursor: pointer; }
+.sw input::-webkit-color-swatch-wrapper { padding: 0; }
+.sw input::-webkit-color-swatch { border: 0; border-radius: var(--pill); }
+.sw input::-moz-color-swatch { border: 0; border-radius: var(--pill); }
+code { font: 500 13px/1.5 var(--mono); color: var(--ink-2); overflow-wrap: anywhere; }
 .upload input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 .upload:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
 .lib { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
@@ -85,10 +95,26 @@ button:disabled { opacity: .45; cursor: default; }
 #status:empty { display: none; }
 #status.err { background: var(--bad-tint); color: var(--bad); }
 .layers { display: grid; gap: 2px; list-style: none; margin: 0; padding: 0; }
-.layers button { display: block; width: 100%; text-align: left; border-radius: var(--r-sm); background: transparent; padding: 8px 12px; }
-.layers button::first-letter, #scheme button { text-transform: capitalize; }
-.layers button:hover { background: var(--fill); }
-.layers button[aria-current=true] { background: var(--ink); color: #fff; }
+.layers li { display: flex; align-items: center; gap: 2px; border-radius: var(--r-sm); box-shadow: inset 0 0 0 0 var(--accent); transition: background-color .15s ease, box-shadow .15s ease, opacity .15s ease; }
+.layers li:hover { background: var(--fill); }
+.layers li.drop { box-shadow: inset 0 0 0 2px var(--accent); }
+.layers li.lift { opacity: .5; }
+.pickl svg { touch-action: none; }
+.layers li[aria-current=true] { background: var(--ink); }
+.layers li[aria-current=true] button { color: #fff; }
+.layers li.off .pickl { opacity: .45; }
+.layers button { background: transparent; }
+.layers button:hover { background: transparent; }
+.pickl { display: flex; align-items: center; gap: 10px; flex: 1 1 auto; min-width: 0; text-align: left; padding: 6px 8px; border-radius: var(--r-sm); cursor: grab; }
+.pickl svg { flex: none; width: 34px; height: 34px; padding: 3px; border-radius: 8px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--fill-2); }
+.pickl span { display: grid; min-width: 0; line-height: 1.25; }
+.pickl small { font-size: 13px; color: var(--label); }
+.layers li[aria-current=true] small { color: #cfcce0; }
+.ic { flex: none; display: grid; place-items: center; width: 32px; height: 34px; padding: 0; color: var(--label); }
+.ic svg { width: 18px; height: 18px; }
+.layers .ic:hover { color: var(--ink); background: var(--fill-2); }
+.layers li[aria-current=true] .ic:hover { background: rgb(255 255 255 / .12); }
+.layers [data-l=del]:hover { color: var(--bad); }
 main { display: grid; grid-template-rows: auto minmax(0, 1fr); min-width: 0; gap: 14px; }
 .bar { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
 .meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
@@ -101,9 +127,7 @@ main { display: grid; grid-template-rows: auto minmax(0, 1fr); min-width: 0; gap
   background: radial-gradient(var(--dot) 1px, transparent 1px) 0 0 / 16px 16px; }
 #stage svg { max-width: 100%; max-height: calc(100vh - 150px); width: auto; height: auto; background: var(--surface); border-radius: 8px; box-shadow: var(--shadow); user-select: none; }
 #stage g[data-i] { cursor: grab; }
-#selected:disabled { display: none; }
-#selected button { flex: 1 1 auto; font-size: 14px; padding: 9px 12px; white-space: nowrap; }
-#selected [data-act=del] { color: var(--bad); }
+#stage .rot { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cg stroke='%23fff' stroke-width='4.5'%3E%3Cpath d='M19 12a7 7 0 1 1-2.1-5'/%3E%3Cpath d='M19 3v4h-4'/%3E%3C/g%3E%3Cg stroke='%231d1b2e' stroke-width='2'%3E%3Cpath d='M19 12a7 7 0 1 1-2.1-5'/%3E%3Cpath d='M19 3v4h-4'/%3E%3C/g%3E%3C/svg%3E") 12 12, alias; }
 @media (max-width: 860px) {
   /* Заголовок сверху, затем холст, затем панели. */
   .app { display: flex; flex-direction: column; padding: 16px; }
@@ -146,7 +170,17 @@ main { display: grid; grid-template-rows: auto minmax(0, 1fr); min-width: 0; gap
     <div class="field">Фон<select id="background" aria-label="Фон"><option value="lines">Линии</option><option value="confetti">Конфетти</option><option value="none">Без фона</option></select></div>
     <div class="k">Цветовая схема</div>
     <div class="pick" id="scheme" role="group" aria-label="Цветовая схема"></div>
-    <label class="upload"><input id="palette" type="file" accept=".json,application/json">+ Своя палитра, JSON</label>
+    <details id="custom">
+      <summary class="upload">+ Своя палитра</summary>
+      <form id="paletteForm">
+        <div class="field">Название<input name="sid" maxlength="32" required aria-label="Название схемы" placeholder="моя-схема"></div>
+        <div class="field">Фон<div class="sw" data-k="background"><input type="color" aria-label="Фон, светлый" title="Фон, светлый"><input type="color" aria-label="Фон, средний" title="Фон, средний"><input type="color" aria-label="Фон, тёмный" title="Фон, тёмный"></div></div>
+        <div class="field">Объекты<div class="sw" data-k="object"><input type="color" aria-label="Объекты, цвет 1" title="Объекты, цвет 1"><input type="color" aria-label="Объекты, цвет 2" title="Объекты, цвет 2"><input type="color" aria-label="Объекты, цвет 3" title="Объекты, цвет 3"></div></div>
+        <div class="k">Фон от светлого к тёмному. Цвета фона и объектов не должны совпадать. Правки сразу видны на холсте.</div>
+        <div class="row"><button class="main">Сохранить</button><label class="upload"><input id="palette" type="file" accept=".json,application/json">Из файла JSON</label></div>
+        <div class="k">Формат файла: <code>{"id": "sea", "background": [3 hex], "object": [3 hex]}</code>, можно массив схем.</div>
+      </form>
+    </details>
   </fieldset>
 
   <fieldset>
@@ -154,22 +188,9 @@ main { display: grid; grid-template-rows: auto minmax(0, 1fr); min-width: 0; gap
     <div class="lib" id="lib"></div>
   </fieldset>
 
-  <fieldset id="selected" disabled>
-    <legend>Выбранный объект</legend>
-    <label class="field">Поворот<input id="rotation" type="range" min="-180" max="180" step="1"></label>
-    <div class="row">
-      <button type="button" data-act="state">Главный / фоновый</button>
-      <button type="button" data-act="dup">Дублировать</button>
-      <button type="button" data-act="del">Удалить</button>
-    </div>
-    <div class="row">
-      <button type="button" data-act="up">Слой выше</button>
-      <button type="button" data-act="down">Слой ниже</button>
-    </div>
-  </fieldset>
-
   <fieldset>
-    <legend>Слои, верхний первым</legend>
+    <legend>Слои</legend>
+    <div class="k">Верхний первым. Порядок меняется перетаскиванием строки, на телефоне - за миниатюру. Поворот - за угол рамки на холсте.</div>
     <ul class="layers" id="layers"></ul>
   </fieldset>
 </aside>
