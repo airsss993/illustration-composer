@@ -42,7 +42,8 @@ function inspect(path, roleByHex = roleIndex('lilac')) {
 }
 
 const objects = [];
-const scenes = [];
+// Фоны-образцы схем только проверяются: в манифест не идут, их никто не читает.
+let scenes = 0;
 for (const size of ['L', 'S']) {
   for (const id of Object.keys(NAMES)) {
     const main = inspect(join(LIB, size, 'main', `${id}.svg`));
@@ -67,7 +68,7 @@ for (const size of ['L', 'S']) {
     const scheme = f.replace('.svg', '');
     const s = inspect(join(LIB, size, 'scene', f), roleIndex(scheme));
     assert(s.roles.every((r) => !r.startsWith('obj')), `${f}: объектный цвет в фоне`);
-    scenes.push({ scheme, size, kind: kindOf(join(LIB, size, 'scene', f)), file: `${size}/scene/${f}`, width: s.width, height: s.height, roles: s.roles });
+    scenes += 1;
   }
 }
 
@@ -104,7 +105,6 @@ const manifest = {
   formats: FORMATS,
   objects,
   backgrounds,
-  scenes,
 };
 writeFileSync(join(LIB, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
-console.log(`ok: ${objects.length} объектов, ${backgrounds.length} фонов под форматы, ${scenes.length} фонов-образцов схем`);
+console.log(`ok: ${objects.length} объектов, ${backgrounds.length} фонов под форматы, ${scenes} фонов-образцов схем`);

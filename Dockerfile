@@ -4,7 +4,8 @@ WORKDIR /app
 COPY server.mjs ./
 COPY web web
 COPY library library
-COPY examples examples
+# Из примеров интерфейсу нужны только раскладки; эталонные SVG и PNG - для тестов и README.
+COPY examples/layouts.json examples/
 USER node
 EXPOSE 8080
 CMD ["node", "server.mjs", "8080"]
