@@ -1,6 +1,6 @@
 // Статика репозитория: web/ - интерфейс, library/ и examples/ - данные. Запуск: node server.mjs [порт].
 // POST /api/metaphor - разбор фразы языковой моделью через OpenAI-совместимый API, если задан
-// LLM_API_KEY. Без ключа - 503, интерфейс тогда разбирает фразу словарём.
+// LLM_API_KEY и LLM_BASE_URL. Без них - 503, интерфейс тогда разбирает фразу словарём.
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
@@ -13,10 +13,10 @@ const PORT = Number(process.argv[2] ?? process.env.PORT ?? 8080);
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json', '.svg': 'image/svg+xml', '.css': 'text/css', '.png': 'image/png' };
 const ALLOWED = ['web', 'library', 'examples'];
 
-// Любой OpenAI-совместимый /chat/completions: taynik.store, OpenAI, Google
-// (https://generativelanguage.googleapis.com/v1beta/openai). Модели пробуются по очереди.
-const KEY = process.env.LLM_API_KEY;
-const BASE = (process.env.LLM_BASE_URL ?? 'https://taynik.store/v1').replace(/\/$/, '');
+// Любой OpenAI-совместимый /chat/completions: OpenAI, Google
+// (https://generativelanguage.googleapis.com/v1beta/openai) и другие. Модели пробуются по очереди.
+const BASE = process.env.LLM_BASE_URL?.replace(/\/$/, '');
+const KEY = BASE && process.env.LLM_API_KEY;
 const MODELS = (process.env.LLM_MODELS ?? 'orig/claude-haiku-5-5,gemini-3.8-flash').split(',').map((m) => m.trim()).filter(Boolean);
 const OBJECTS = JSON.parse(readFileSync(join(ROOT, 'library/manifest.json'), 'utf8')).objects
   .filter((o) => o.size === 'L').map((o) => ({ id: o.id, names: o.names }));
