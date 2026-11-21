@@ -133,6 +133,10 @@ main { display: grid; grid-template-rows: auto minmax(0, 1fr); min-width: 0; gap
 .meta .dots i { width: 14px; height: 14px; box-shadow: 0 0 0 2px var(--surface); }
 #export { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; }
 #export svg { width: 18px; height: 18px; }
+.acts { display: flex; gap: 8px; }
+.hist { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; background: var(--surface); box-shadow: var(--shadow); color: var(--ink); }
+.hist:hover:not(:disabled) { background: var(--surface); color: var(--accent); }
+.hist svg { width: 20px; height: 20px; }
 #stage { padding: 24px; display: grid; place-items: center; min-height: 0; touch-action: none; border-radius: var(--r);
   background: radial-gradient(var(--dot) 1px, transparent 1px) 0 0 / 16px 16px; }
 #stage svg { max-width: 100%; max-height: calc(100vh - 150px); width: auto; height: auto; background: var(--surface); border-radius: 8px; box-shadow: var(--shadow); user-select: none; }
@@ -200,14 +204,18 @@ main { display: grid; grid-template-rows: auto minmax(0, 1fr); min-width: 0; gap
 
   <fieldset>
     <legend>Слои</legend>
-    <div class="k">Верхний первым. Порядок меняется перетаскиванием строки, на телефоне - за миниатюру. Поворот - за угол рамки на холсте.</div>
+    <div class="k">Верхний первым. Порядок меняется перетаскиванием строки (на телефоне - за миниатюру) или Alt+стрелкой. Поворот - за угол рамки или клавишами [ и ]. Стрелки двигают выбранный объект, с Shift быстрее. Cmd/Ctrl+Z отменяет.</div>
     <ul class="layers" id="layers"></ul>
   </fieldset>
 </aside>
 <main>
   <div class="bar">
     <ul class="meta" id="info" aria-label="Параметры холста"></ul>
+    <div class="acts">
+    <button type="button" class="hist" id="undo" aria-label="Отменить" title="Отменить, Cmd/Ctrl+Z" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+    <button type="button" class="hist" id="redo" aria-label="Повторить" title="Повторить, Shift+Cmd/Ctrl+Z" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>
     <button class="main" id="export"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/></svg>Скачать SVG</button>
+    </div>
   </div>
   <div id="stage"></div>
 </main>

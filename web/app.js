@@ -83,7 +83,40 @@ function neededFiles() {
   return files;
 }
 
+// История для отмены: любая правка проходит через render, там и запоминаем прежнее состояние.
+// Выделение само шага не создаёт, но запоминается вместе с ним: отмена возвращает и его.
+// Серия нажатий стрелок за 700 мс - один шаг.
+const past = [], future = [];
+let saved = null, savedSel = -1, quietUntil = 0;
+function remember() {
+  const now = JSON.stringify(state);
+  if (saved && now !== saved && performance.now() > quietUntil) {
+    past.push({ s: saved, sel: savedSel });
+    if (past.length > 100) past.shift();
+    future.length = 0;
+  }
+  saved = now;
+  savedSel = selected;
+  $('#undo').disabled = !past.length;
+  $('#redo').disabled = !future.length;
+}
+function undo(back = true) {
+  const [from, to] = back ? [past, future] : [future, past];
+  if (!from.length) return;
+  to.push({ s: saved, sel: selected });
+  const step = from.pop();
+  saved = step.s;
+  Object.assign(state, JSON.parse(saved));
+  selected = state.objects[step.sel] && !state.objects[step.sel].hidden ? step.sel : -1;
+  $('#size').value = state.size;
+  $('#background').value = state.background;
+  redraw();
+}
+$('#undo').onclick = () => undo();
+$('#redo').onclick = () => undo(false);
+
 async function render() {
+  remember();
   await load(neededFiles());
   // Пока шли загрузки, состояние могло смениться: тогда нарисует render(), вызванный после смены.
   if (neededFiles().some((f) => !templates.has(f))) return;
@@ -105,8 +138,12 @@ async function render() {
 }
 
 // Слои: верхний первым. Строку можно перетащить, скрыть или удалить.
+let shown = []; // объекты в строках слоёв: по ним возвращаем фокус после перерисовки
 function renderLayers() {
   const list = $('#layers');
+  const act = list.contains(document.activeElement) && document.activeElement;
+  const back = act && { o: shown[act.closest('li').dataset.i], l: act.dataset.l };
+  shown = [...state.objects];
   list.innerHTML = '';
   [...state.objects.keys()].reverse().forEach((i) => {
     const inst = state.objects[i];
@@ -124,6 +161,11 @@ function renderLayers() {
       + `<button type="button" class="ic" data-l="del" aria-label="Удалить: ${o.names[0]}" title="Удалить">${icon('del')}</button>`;
     list.append(li);
   });
+  // Без этого после каждого действия с клавиатуры фокус улетал бы в начало страницы.
+  if (!back) return;
+  const i = state.objects.indexOf(back.o) >= 0 ? state.objects.indexOf(back.o) : selected;
+  const row = list.querySelector(`li[data-i="${i}"]`) ?? list.firstElementChild;
+  (row?.querySelector(back.l ? `[data-l=${back.l}]` : '.pickl') ?? row?.querySelector('.pickl'))?.focus();
 }
 // Смена порядка или удаление слоя не должны терять выделенный объект.
 function edit(change) {
@@ -412,10 +454,36 @@ const actions = {
     selected = i + 1;
   },
 };
+const STEP = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
 document.addEventListener('keydown', (e) => {
-  if (selected < 0 || e.target.matches?.('input, select, [role=option]')) return;
+  // В полях ввода у клавиш своя работа, включая собственную отмену текста; список сам гасит стрелки.
+  if (e.defaultPrevented || e.target.matches?.('input, select, textarea, [role=option]')) return;
+  // По e.code: в русской раскладке e.key у этих клавиш "я", "н", "в", "х", "ъ".
+  const mod = e.metaKey || e.ctrlKey, code = e.code;
+  if (mod && (code === 'KeyZ' || code === 'KeyY')) { e.preventDefault(); undo(code === 'KeyZ' && !e.shiftKey); return; }
+  const o = state.objects[selected];
+  if (!o) return;
   if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); edit(() => state.objects.splice(selected, 1)); }
-  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'd') { e.preventDefault(); actions.dup(selected); render(); }
+  else if (mod && code === 'KeyD') { e.preventDefault(); actions.dup(selected); render(); }
+  else if (STEP[e.key] && e.altKey) {
+    // Alt+стрелка вверх - выше в списке слоёв, то есть ближе к зрителю.
+    const to = selected + (e.key === 'ArrowUp' ? 1 : e.key === 'ArrowDown' ? -1 : 0);
+    if (to === selected || !state.objects[to]) return;
+    e.preventDefault();
+    edit(() => state.objects.splice(to, 0, ...state.objects.splice(selected, 1)));
+  } else if (STEP[e.key] && !mod) {
+    e.preventDefault();
+    const d = e.shiftKey ? 50 : 10;
+    o.x += STEP[e.key][0] * d;
+    o.y += STEP[e.key][1] * d;
+    render();
+    quietUntil = performance.now() + 700;
+  } else if ((code === 'BracketLeft' || code === 'BracketRight') && !mod) {
+    e.preventDefault();
+    o.rotation = ((((o.rotation ?? 0) + (code === 'BracketRight' ? 15 : -15) + 180) % 360) + 360) % 360 - 180;
+    render();
+    quietUntil = performance.now() + 700;
+  }
 });
 
 // Перенос мышью или пальцем
@@ -425,6 +493,7 @@ $('#stage').addEventListener('pointerdown', (e) => {
   const svg = $('#stage svg');
   const g = e.target.closest('g[data-i]');
   if (!svg || !svg.contains(e.target)) return;
+  quietUntil = 0; // перенос мышью сразу после стрелок - отдельный шаг отмены
   if (e.target.classList.contains('rot')) {
     const o = state.objects[selected];
     const [w, h] = dims(o);
