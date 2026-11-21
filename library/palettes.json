@@ -1,0 +1,22 @@
+{
+  "_source": "Figma 2FainuemKZkOmg7kHyowFN, page 0:1, frames 21:29569, 21:29570, 21:29579. Arrays keep the row order of the Figma swatches; recolor maps by index.",
+  "ink": "#181817",
+  "white": "#FFFFFF",
+  "schemes": [
+    {
+      "id": "lilac",
+      "background": ["#D7CDF5", "#AA9BF0", "#7864D7"],
+      "object": ["#F9ECB0", "#F9A3AA", "#FFE3E1"]
+    },
+    {
+      "id": "peach",
+      "background": ["#FDD7B9", "#FAC896", "#D27532"],
+      "object": ["#F9ECB0", "#80DADA", "#BEEBEB"]
+    },
+    {
+      "id": "mint",
+      "background": ["#BEEBEB", "#80DADA", "#5ABEBE"],
+      "object": ["#FFD4F2", "#6D7BFC", "#B6C6FE"]
+    }
+  ]
+}
