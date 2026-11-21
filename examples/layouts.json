@@ -1,0 +1,485 @@
+{
+ "_source": "Figma, страница \"Примеры композиций\", экспорт SVG 1x. Координаты - сдвиг объекта набора L в масштабе 1 от левого верхнего угла кадра, сняты сопоставлением путей с library/.",
+ "layouts": [
+  {
+   "file": "svg/800x1200-book-phone.svg",
+   "figmaExport": "Фон-12.svg",
+   "format": [
+    800,
+    1200
+   ],
+   "background": "lines",
+   "objects": [
+    {
+     "id": "book",
+     "state": "main",
+     "x": -679,
+     "y": 112
+    },
+    {
+     "id": "phone",
+     "state": "main",
+     "x": 212,
+     "y": 414
+    }
+   ]
+  },
+  {
+   "file": "svg/800x1200-book-puzzle-pen.svg",
+   "figmaExport": "Фон-16.svg",
+   "format": [
+    800,
+    1200
+   ],
+   "background": "lines",
+   "objects": [
+    {
+     "id": "book",
+     "state": "background",
+     "x": -251,
+     "y": -129
+    },
+    {
+     "id": "puzzle",
+     "state": "main",
+     "x": -23,
+     "y": 196
+    },
+    {
+     "id": "pen",
+     "state": "main",
+     "x": 21,
+     "y": 828
+    }
+   ]
+  },
+  {
+   "file": "svg/800x1200-folder-wallet-coin.svg",
+   "figmaExport": "Фон-13.svg",
+   "format": [
+    800,
+    1200
+   ],
+   "background": "lines",
+   "objects": [
+    {
+     "id": "folder",
+     "state": "main",
+     "x": -44,
+     "y": -4
+    },
+    {
+     "id": "wallet",
+     "state": "main",
+     "x": -179,
+     "y": 585
+    },
+    {
+     "id": "coin",
+     "state": "main",
+     "x": 437,
+     "y": 874
+    }
+   ]
+  },
+  {
+   "file": "svg/800x1200-lamp-wallet-coin.svg",
+   "figmaExport": "Фон-15.svg",
+   "format": [
+    800,
+    1200
+   ],
+   "background": "lines",
+   "objects": [
+    {
+     "id": "lamp",
+     "state": "background",
+     "x": -140,
+     "y": -588
+    },
+    {
+     "id": "wallet",
+     "state": "main",
+     "x": 35,
+     "y": 709,
+     "recolor": {
+      "bg1": "obj1",
+      "obj1": "obj2"
+     }
+    },
+    {
+     "id": "coin",
+     "state": "main",
+     "x": 436,
+     "y": 563
+    }
+   ]
+  },
+  {
+   "file": "svg/800x1200-phone-puzzle.svg",
+   "figmaExport": "Фон-11.svg",
+   "format": [
+    800,
+    1200
+   ],
+   "background": "confetti",
+   "objects": [
+    {
+     "id": "phone",
+     "state": "main",
+     "x": -55,
+     "y": 473
+    },
+    {
+     "id": "puzzle",
+     "state": "main",
+     "x": 197,
+     "y": 183
+    }
+   ]
+  },
+  {
+   "file": "svg/800x1200-vase-headphones.svg",
+   "figmaExport": "Фон-14.svg",
+   "format": [
+    800,
+    1200
+   ],
+   "background": "confetti",
+   "objects": [
+    {
+     "id": "vase",
+     "state": "background",
+     "x": 304,
+     "y": -190
+    },
+    {
+     "id": "headphones",
+     "state": "main",
+     "x": 0,
+     "y": 487
+    }
+   ]
+  },
+  {
+   "file": "svg/1000x1000-book-phone.svg",
+   "figmaExport": "Фон.svg",
+   "format": [
+    1000,
+    1000
+   ],
+   "background": "lines",
+   "objects": [
+    {
+     "id": "book",
+     "state": "main",
+     "x": -640,
+     "y": 12
+    },
+    {
+     "id": "phone",
+     "state": "main",
+     "x": 144,
+     "y": 208
+    }
+   ]
+  },
+  {
+   "file": "svg/1000x1000-book-puzzle-pen.svg",
+   "figmaExport": "Фон-2.svg",
+   "format": [
+    1000,
+    1000
+   ],
+   "background": "lines",
+   "objects": [
+    {
+     "id": "book",
+     "state": "background",
+     "x": -121,
+     "y": -232
+    },
+    {
+     "id": "puzzle",
+     "state": "main",
+     "x": 67,
+     "y": 112
+    },
+    {
+     "id": "pen",
+     "state": "main",
+     "x": 94,
+     "y": 655
+    }
+   ]
+  },
+  {
+   "file": "svg/1000x1000-folder-wallet-coin.svg",
+   "figmaExport": "Фон-3.svg",
+   "format": [
+    1000,
+    1000
+   ],
+   "background": "lines",
+   "objects": [
+    {
+     "id": "folder",
+     "state": "main",
+     "x": 31,
+     "y": 0
+    },
+    {
+     "id": "wallet",
+     "state": "main",
+     "x": -180,
+     "y": 517
+    },
+    {
+     "id": "coin",
+     "state": "main",
+     "x": 487,
+     "y": 725
+    }
+   ]
+  },
+  {
+   "file": "svg/1000x1000-lamp-wallet-coin.svg",
+   "figmaExport": "Фон-1.svg",
+   "format": [
+    1000,
+    1000
+   ],
+   "background": "lines",
+   "objects": [
+    {
+     "id": "lamp",
+     "state": "background",
+     "x": -88,
+     "y": -606
+    },
+    {
+     "id": "wallet",
+     "state": "main",
+     "x": 135,
+     "y": 544,
+     "recolor": {
+      "bg1": "obj1",
+      "obj1": "obj2"
+     }
+    },
+    {
+     "id": "coin",
+     "state": "main",
+     "x": 607,
+     "y": 437
+    }
+   ]
+  },
+  {
+   "file": "svg/1000x1000-phone-puzzle.svg",
+   "figmaExport": "Фон-4.svg",
+   "format": [
+    1000,
+    1000
+   ],
+   "background": "confetti",
+   "objects": [
+    {
+     "id": "phone",
+     "state": "main",
+     "x": 73,
+     "y": 384
+    },
+    {
+     "id": "puzzle",
+     "state": "main",
+     "x": 331,
+     "y": 161
+    }
+   ]
+  },
+  {
+   "file": "svg/1000x1000-vase-headphones.svg",
+   "figmaExport": "Фон-17.svg",
+   "format": [
+    1000,
+    1000
+   ],
+   "background": "confetti",
+   "objects": [
+    {
+     "id": "vase",
+     "state": "background",
+     "x": -33,
+     "y": -374
+    },
+    {
+     "id": "headphones",
+     "state": "main",
+     "x": 192,
+     "y": 282
+    }
+   ]
+  },
+  {
+   "file": "svg/1200x630-book-phone.svg",
+   "figmaExport": "Фон-7.svg",
+   "format": [
+    1200,
+    630
+   ],
+   "background": "lines",
+   "objects": [
+    {
+     "id": "book",
+     "state": "main",
+     "x": -381,
+     "y": -321
+    },
+    {
+     "id": "phone",
+     "state": "main",
+     "x": 510,
+     "y": -19
+    }
+   ]
+  },
+  {
+   "file": "svg/1200x630-book-puzzle-pen.svg",
+   "figmaExport": "Фон-10.svg",
+   "format": [
+    1200,
+    630
+   ],
+   "background": "lines",
+   "objects": [
+    {
+     "id": "book",
+     "state": "background",
+     "x": 205,
+     "y": -390
+    },
+    {
+     "id": "puzzle",
+     "state": "main",
+     "x": 399,
+     "y": -63
+    },
+    {
+     "id": "pen",
+     "state": "main",
+     "x": 37,
+     "y": 287
+    }
+   ]
+  },
+  {
+   "file": "svg/1200x630-folder-wallet-coin.svg",
+   "figmaExport": "Фон-9.svg",
+   "format": [
+    1200,
+    630
+   ],
+   "background": "lines",
+   "objects": [
+    {
+     "id": "folder",
+     "state": "main",
+     "x": 198,
+     "y": -202
+    },
+    {
+     "id": "wallet",
+     "state": "main",
+     "x": -214,
+     "y": 204
+    },
+    {
+     "id": "coin",
+     "state": "main",
+     "x": 417,
+     "y": 432
+    }
+   ]
+  },
+  {
+   "file": "svg/1200x630-lamp-wallet-coin.svg",
+   "figmaExport": "Фон-8.svg",
+   "format": [
+    1200,
+    630
+   ],
+   "background": "lines",
+   "objects": [
+    {
+     "id": "lamp",
+     "state": "background",
+     "x": -19,
+     "y": -792
+    },
+    {
+     "id": "wallet",
+     "state": "main",
+     "x": 300,
+     "y": 291,
+     "recolor": {
+      "bg1": "obj1",
+      "obj1": "obj2"
+     }
+    },
+    {
+     "id": "coin",
+     "state": "main",
+     "x": 899,
+     "y": 129
+    }
+   ]
+  },
+  {
+   "file": "svg/1200x630-phone-puzzle.svg",
+   "figmaExport": "Фон-5.svg",
+   "format": [
+    1200,
+    630
+   ],
+   "background": "confetti",
+   "objects": [
+    {
+     "id": "phone",
+     "state": "main",
+     "x": 105,
+     "y": 153
+    },
+    {
+     "id": "puzzle",
+     "state": "main",
+     "x": 629,
+     "y": 69
+    }
+   ]
+  },
+  {
+   "file": "svg/1200x630-vase-headphones.svg",
+   "figmaExport": "Фон-6.svg",
+   "format": [
+    1200,
+    630
+   ],
+   "background": "confetti",
+   "objects": [
+    {
+     "id": "vase",
+     "state": "background",
+     "x": -98,
+     "y": -379
+    },
+    {
+     "id": "headphones",
+     "state": "main",
+     "x": 321,
+     "y": 77
+    }
+   ]
+  }
+ ]
+}

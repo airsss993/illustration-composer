@@ -1,0 +1,793 @@
+{
+  "_generated": "node scripts/build-manifest.mjs, не править руками",
+  "sourceScheme": "lilac",
+  "formats": [
+    [
+      1000,
+      1000
+    ],
+    [
+      1200,
+      630
+    ],
+    [
+      800,
+      1200
+    ]
+  ],
+  "objects": [
+    {
+      "id": "book",
+      "size": "L",
+      "names": [
+        "книга"
+      ],
+      "width": 1446,
+      "height": 977,
+      "states": {
+        "main": {
+          "file": "L/main/book.svg",
+          "roles": [
+            "ink",
+            "obj1",
+            "obj2",
+            "obj3",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "L/background/book.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 1446,
+          "height": 977
+        }
+      }
+    },
+    {
+      "id": "phone",
+      "size": "L",
+      "names": [
+        "телефон",
+        "смартфон"
+      ],
+      "width": 797,
+      "height": 462,
+      "states": {
+        "main": {
+          "file": "L/main/phone.svg",
+          "roles": [
+            "bg1",
+            "bg3",
+            "ink",
+            "obj1",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "L/background/phone.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 797,
+          "height": 462
+        }
+      }
+    },
+    {
+      "id": "puzzle",
+      "size": "L",
+      "names": [
+        "пазл",
+        "пазлы"
+      ],
+      "width": 545,
+      "height": 314,
+      "states": {
+        "main": {
+          "file": "L/main/puzzle.svg",
+          "roles": [
+            "ink",
+            "obj1",
+            "obj2",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "L/background/puzzle.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 545,
+          "height": 314
+        }
+      }
+    },
+    {
+      "id": "coin",
+      "size": "L",
+      "names": [
+        "монета"
+      ],
+      "width": 287,
+      "height": 189,
+      "states": {
+        "main": {
+          "file": "L/main/coin.svg",
+          "roles": [
+            "ink",
+            "obj1",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "L/background/coin.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 287,
+          "height": 189
+        }
+      }
+    },
+    {
+      "id": "headphones",
+      "size": "L",
+      "names": [
+        "наушники"
+      ],
+      "width": 889,
+      "height": 692,
+      "states": {
+        "main": {
+          "file": "L/main/headphones.svg",
+          "roles": [
+            "bg1",
+            "ink",
+            "obj1",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "L/background/headphones.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 889,
+          "height": 692
+        }
+      }
+    },
+    {
+      "id": "lamp",
+      "size": "L",
+      "names": [
+        "лампа"
+      ],
+      "width": 946,
+      "height": 1129,
+      "states": {
+        "main": {
+          "file": "L/main/lamp.svg",
+          "roles": [
+            "bg1",
+            "ink",
+            "obj1",
+            "obj2",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "L/background/lamp.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 946,
+          "height": 1129
+        }
+      }
+    },
+    {
+      "id": "vase",
+      "size": "L",
+      "names": [
+        "ваза",
+        "тюльпаны",
+        "цветы"
+      ],
+      "width": 591,
+      "height": 748,
+      "states": {
+        "main": {
+          "file": "L/main/vase.svg",
+          "roles": [
+            "bg2",
+            "ink",
+            "obj1",
+            "obj2",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "L/background/vase.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 591,
+          "height": 748
+        }
+      }
+    },
+    {
+      "id": "wallet",
+      "size": "L",
+      "names": [
+        "кошелек",
+        "кошелёк"
+      ],
+      "width": 631,
+      "height": 397,
+      "states": {
+        "main": {
+          "file": "L/main/wallet.svg",
+          "roles": [
+            "bg1",
+            "ink",
+            "obj1",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "L/background/wallet.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 631,
+          "height": 397
+        }
+      }
+    },
+    {
+      "id": "folder",
+      "size": "L",
+      "names": [
+        "папка"
+      ],
+      "width": 1241,
+      "height": 659,
+      "states": {
+        "main": {
+          "file": "L/main/folder.svg",
+          "roles": [
+            "ink",
+            "obj1",
+            "obj2",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "L/background/folder.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 1241,
+          "height": 659
+        }
+      }
+    },
+    {
+      "id": "pen",
+      "size": "L",
+      "names": [
+        "ручка"
+      ],
+      "width": 509,
+      "height": 286,
+      "states": {
+        "main": {
+          "file": "L/main/pen.svg",
+          "roles": [
+            "bg1",
+            "ink",
+            "obj1",
+            "obj2",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "L/background/pen.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 509,
+          "height": 286
+        }
+      }
+    },
+    {
+      "id": "book",
+      "size": "S",
+      "names": [
+        "книга"
+      ],
+      "width": 723,
+      "height": 489,
+      "states": {
+        "main": {
+          "file": "S/main/book.svg",
+          "roles": [
+            "ink",
+            "obj1",
+            "obj2",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "S/background/book.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 723,
+          "height": 489
+        }
+      },
+      "ratioToL": 0.5
+    },
+    {
+      "id": "phone",
+      "size": "S",
+      "names": [
+        "телефон",
+        "смартфон"
+      ],
+      "width": 399,
+      "height": 231,
+      "states": {
+        "main": {
+          "file": "S/main/phone.svg",
+          "roles": [
+            "bg1",
+            "bg3",
+            "ink",
+            "obj1",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "S/background/phone.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 399,
+          "height": 231
+        }
+      },
+      "ratioToL": 0.5
+    },
+    {
+      "id": "puzzle",
+      "size": "S",
+      "names": [
+        "пазл",
+        "пазлы"
+      ],
+      "width": 273,
+      "height": 157,
+      "states": {
+        "main": {
+          "file": "S/main/puzzle.svg",
+          "roles": [
+            "bg1",
+            "ink",
+            "obj1",
+            "obj2",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "S/background/puzzle.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 273,
+          "height": 157
+        }
+      },
+      "ratioToL": 0.5
+    },
+    {
+      "id": "coin",
+      "size": "S",
+      "names": [
+        "монета"
+      ],
+      "width": 153,
+      "height": 101,
+      "states": {
+        "main": {
+          "file": "S/main/coin.svg",
+          "roles": [
+            "ink",
+            "obj1",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "S/background/coin.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 153,
+          "height": 101
+        }
+      },
+      "ratioToL": 0.53
+    },
+    {
+      "id": "headphones",
+      "size": "S",
+      "names": [
+        "наушники"
+      ],
+      "width": 445,
+      "height": 346,
+      "states": {
+        "main": {
+          "file": "S/main/headphones.svg",
+          "roles": [
+            "bg1",
+            "ink",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "S/background/headphones.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 445,
+          "height": 346
+        }
+      },
+      "ratioToL": 0.5
+    },
+    {
+      "id": "lamp",
+      "size": "S",
+      "names": [
+        "лампа"
+      ],
+      "width": 473,
+      "height": 565,
+      "states": {
+        "main": {
+          "file": "S/main/lamp.svg",
+          "roles": [
+            "bg1",
+            "ink",
+            "obj1",
+            "obj2",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "S/background/lamp.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 473,
+          "height": 565
+        }
+      },
+      "ratioToL": 0.5
+    },
+    {
+      "id": "vase",
+      "size": "S",
+      "names": [
+        "ваза",
+        "тюльпаны",
+        "цветы"
+      ],
+      "width": 324,
+      "height": 409,
+      "states": {
+        "main": {
+          "file": "S/main/vase.svg",
+          "roles": [
+            "bg2",
+            "ink",
+            "obj1",
+            "obj2",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "S/background/vase.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 324,
+          "height": 409
+        }
+      },
+      "ratioToL": 0.55
+    },
+    {
+      "id": "wallet",
+      "size": "S",
+      "names": [
+        "кошелек",
+        "кошелёк"
+      ],
+      "width": 316,
+      "height": 199,
+      "states": {
+        "main": {
+          "file": "S/main/wallet.svg",
+          "roles": [
+            "bg1",
+            "ink",
+            "obj1",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "S/background/wallet.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 316,
+          "height": 199
+        }
+      },
+      "ratioToL": 0.5
+    },
+    {
+      "id": "folder",
+      "size": "S",
+      "names": [
+        "папка"
+      ],
+      "width": 621,
+      "height": 330,
+      "states": {
+        "main": {
+          "file": "S/main/folder.svg",
+          "roles": [
+            "ink",
+            "obj1",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "S/background/folder.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 621,
+          "height": 330
+        }
+      },
+      "ratioToL": 0.5
+    },
+    {
+      "id": "pen",
+      "size": "S",
+      "names": [
+        "ручка"
+      ],
+      "width": 255,
+      "height": 143,
+      "states": {
+        "main": {
+          "file": "S/main/pen.svg",
+          "roles": [
+            "ink",
+            "obj2",
+            "white"
+          ]
+        },
+        "background": {
+          "file": "S/background/pen.svg",
+          "roles": [
+            "bg1",
+            "bg3"
+          ],
+          "width": 255,
+          "height": 143
+        }
+      },
+      "ratioToL": 0.5
+    }
+  ],
+  "backgrounds": [
+    {
+      "kind": "confetti",
+      "format": [
+        1000,
+        1000
+      ],
+      "file": "backgrounds/confetti-1000x1000.svg",
+      "roles": [
+        "bg1",
+        "bg2",
+        "bg3",
+        "white"
+      ]
+    },
+    {
+      "kind": "confetti",
+      "format": [
+        1200,
+        630
+      ],
+      "file": "backgrounds/confetti-1200x630.svg",
+      "roles": [
+        "bg1",
+        "bg2",
+        "bg3",
+        "white"
+      ]
+    },
+    {
+      "kind": "confetti",
+      "format": [
+        800,
+        1200
+      ],
+      "file": "backgrounds/confetti-800x1200.svg",
+      "roles": [
+        "bg1",
+        "bg2",
+        "bg3",
+        "white"
+      ]
+    },
+    {
+      "kind": "lines",
+      "format": [
+        1000,
+        1000
+      ],
+      "file": "backgrounds/lines-1000x1000.svg",
+      "roles": [
+        "bg1",
+        "bg2",
+        "bg3"
+      ]
+    },
+    {
+      "kind": "lines",
+      "format": [
+        1200,
+        630
+      ],
+      "file": "backgrounds/lines-1200x630.svg",
+      "roles": [
+        "bg1",
+        "bg2",
+        "bg3"
+      ]
+    },
+    {
+      "kind": "lines",
+      "format": [
+        800,
+        1200
+      ],
+      "file": "backgrounds/lines-800x1200.svg",
+      "roles": [
+        "bg1",
+        "bg2",
+        "bg3"
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "scheme": "lilac",
+      "size": "L",
+      "kind": "confetti",
+      "file": "L/scene/lilac.svg",
+      "width": 1000,
+      "height": 1000,
+      "roles": [
+        "bg1",
+        "bg2",
+        "bg3",
+        "white"
+      ]
+    },
+    {
+      "scheme": "mint",
+      "size": "L",
+      "kind": "confetti",
+      "file": "L/scene/mint.svg",
+      "width": 1000,
+      "height": 1000,
+      "roles": [
+        "bg1",
+        "bg2",
+        "bg3",
+        "white"
+      ]
+    },
+    {
+      "scheme": "peach",
+      "size": "L",
+      "kind": "lines",
+      "file": "L/scene/peach.svg",
+      "width": 1000,
+      "height": 1000,
+      "roles": [
+        "bg1",
+        "bg2",
+        "bg3",
+        "white"
+      ]
+    },
+    {
+      "scheme": "lilac",
+      "size": "S",
+      "kind": "confetti",
+      "file": "S/scene/lilac.svg",
+      "width": 500,
+      "height": 500,
+      "roles": [
+        "bg1",
+        "bg2",
+        "bg3",
+        "white"
+      ]
+    },
+    {
+      "scheme": "mint",
+      "size": "S",
+      "kind": "confetti",
+      "file": "S/scene/mint.svg",
+      "width": 500,
+      "height": 500,
+      "roles": [
+        "bg1",
+        "bg2",
+        "bg3",
+        "white"
+      ]
+    },
+    {
+      "scheme": "peach",
+      "size": "S",
+      "kind": "lines",
+      "file": "S/scene/peach.svg",
+      "width": 500,
+      "height": 500,
+      "roles": [
+        "bg1",
+        "bg2",
+        "bg3",
+        "white"
+      ]
+    }
+  ]
+}
