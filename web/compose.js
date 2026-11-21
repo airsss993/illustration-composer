@@ -105,6 +105,9 @@ const perms = (arr, k) => (k === 0 ? [[]] : arr.flatMap((x, i) => perms(arr.filt
 // совпало больше всего объектов: совпавшие остаются на своих местах, остальные встают
 // центр в центр в свободные места, ближайшие по площади к их прежним объектам.
 // Лишние места отбрасываются. При равном совпадении выигрывает пример с лучшей подгонкой.
+// Объект, который в примерах бывает только фоновым (лампа, ваза), в чужое место не встаёт:
+// он крупнее остальных в разы и в примерах почти весь за кадром. Ставится фоновым на своё
+// место из своего примера этого формата, под остальными.
 export function compose(ids, format, manifest, layouts) {
   const objL = (id) => manifest.objects.find((o) => o.size === 'L' && o.id === id);
   const inFormat = layouts.filter((l) => l.format.join() === format.join());
@@ -121,13 +124,22 @@ export function compose(ids, format, manifest, layouts) {
       objects: [{ id: o.id, state: 'main', x: Math.round((format[0] - o.width) / 2), y: Math.round((format[1] - o.height) / 2), rotation: 0 }],
     };
   }
+  const bgOnly = used.filter((id) => {
+    const seen = layouts.flatMap((l) => l.objects.filter((o) => o.id === id));
+    return seen.length && seen.every((o) => o.state === 'background');
+  }).sort((a, b) => area(objL(b)) - area(objL(a)));
+  // Закрепляется один, самый крупный: два таких в одном углу перекрывают друг друга.
+  const pin = bgOnly.slice(0, 1);
+  const own = (id) => pin.includes(id) && inFormat.flatMap((l) => l.objects).find((o) => o.id === id);
   const plan = (l) => {
     const slots = l.objects.map((s) => ({ ...s, taken: used.includes(s.id) }));
-    const rest = used.filter((id) => !slots.some((s) => s.taken && s.id === id)).sort((a, b) => area(objL(b)) - area(objL(a)));
+    const missing = used.filter((id) => !slots.some((s) => s.taken && s.id === id));
+    const pinned = missing.filter(own).map((id) => ({ ...own(id), rotation: 0 }));
+    const rest = missing.filter((id) => !own(id)).sort((a, b) => area(objL(b)) - area(objL(a)));
     const cost = (pick) => pick.reduce((sum, s, i) => sum + Math.abs(Math.log(area(objL(rest[i])) / area(objL(s.id)))), 0);
     const free = perms(slots.filter((s) => !s.taken), rest.length).sort((a, b) => cost(a) - cost(b))[0];
     const misfit = cost(free);
-    const objects = slots.filter((s) => s.taken || free.includes(s)).map((slot) => {
+    const objects = [...pinned, ...slots.filter((s) => s.taken || free.includes(s)).map((slot) => {
       const { taken, ...s } = slot;
       if (taken) return { ...s, rotation: 0 };
       const o = objL(rest[free.indexOf(slot)]);
@@ -136,12 +148,14 @@ export function compose(ids, format, manifest, layouts) {
         id: o.id, state: s.state, rotation: 0,
         x: Math.round(s.x + was.width / 2 - o.width / 2), y: Math.round(s.y + was.height / 2 - o.height / 2),
       };
-    });
+    })];
     return { l, objects, misfit, overlap: used.length - rest.length };
   };
-  const best = inFormat.filter((l) => l.objects.length >= used.length).map(plan)
+  const best = inFormat.filter((l) => l.objects.length >= used.filter((id) => !own(id) || l.objects.some((o) => o.id === id)).length).map(plan)
     .sort((a, b) => b.overlap - a.overlap || a.misfit - b.misfit || a.l.objects.length - b.l.objects.length)[0];
   const { l: base, objects } = best;
+  // Без главного объекта композиции нет (лампа и ваза вдвоём): незакреплённые становятся главными.
+  if (objects.every((o) => o.state === 'background')) objects.forEach((o) => { if (!pin.includes(o.id)) o.state = 'main'; });
   return { background: base.background, template: base.file, objects, dropped };
 }
 

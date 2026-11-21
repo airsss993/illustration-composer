@@ -186,8 +186,7 @@ function apply(ids, how) {
   $('#background').value = state.background;
   selected = -1;
   const names = ids.slice(0, 3).map((id) => objOf({ id }).names[0]).join(', ');
-  const base = res.template ? `раскладка по примеру ${res.template.replace('svg/', '')}` : 'объект по центру';
-  say(`Собрано: ${names}; ${base}.${res.dropped?.length ? ` Не поместились: ${res.dropped.join(', ')}, добавьте вручную.` : ''}`);
+  say(`Собрано: ${names}.${res.dropped?.length ? ` Не поместились: ${res.dropped.join(', ')}, добавьте вручную.` : ''}`);
   render().then(() => fadeIn($('#stage svg'), { transform: 'scale(.98)' }));
 }
 
@@ -212,7 +211,7 @@ $('#byMetaphor').onsubmit = async (e) => {
   const ai = await askModel(q);
   button.disabled = false;
   apply(ai?.ids ?? C.parseMetaphor(q), 'metaphor');
-  if (ai) say(`${$('#status').textContent} ${ai.model}: ${ai.reason}`);
+  if (ai) say(`${$('#status').textContent} ${ai.reason}`);
   else if ($('#status').textContent.startsWith('Собрано')) say(`${$('#status').textContent} Разбор словарём.`);
 };
 $('#byNames').onsubmit = (e) => {
@@ -326,11 +325,21 @@ $('#custom').ontoggle = () => {
   while (palettes.schemes.some((x) => x.id === `своя-${n}`)) n += 1;
   pf.elements.sid.value = `своя-${n}`;
 };
+// Пипетка шлёт input десятками в секунду: пока тянут, только холст и не чаще кадра,
+// превью библиотеки и слоёв - по change, когда цвет отпустили.
+let painting = false;
 pf.oninput = (e) => {
   if (e.target.type !== 'color') return;
   draft = { ...readDraft(), id: pf.elements.sid.value.trim() || 'своя' };
-  redraw();
+  if (painting) return;
+  painting = true;
+  requestAnimationFrame(() => {
+    painting = false;
+    $('#stage').innerHTML = C.buildSvg(state, colors(), (f) => templates.get(f), manifest);
+    frame();
+  });
 };
+pf.onchange = (e) => { if (e.target.type === 'color') redraw(); };
 pf.onsubmit = (e) => {
   e.preventDefault();
   try {

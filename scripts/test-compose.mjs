@@ -54,6 +54,14 @@ assert.equal(C.compose(['lamp'], [1000, 1000], manifest, layouts).objects.length
 const four = C.compose(['book', 'pen', 'coin', 'lamp'], [1200, 630], manifest, layouts);
 assert.equal(four.objects.length, 3);
 assert.deepEqual(four.dropped, ['lamp']);
+// Лампа в примерах только фоновая и за кадром: в чужой раскладке встаёт так же, а не главной на чужое место.
+for (const fmt of manifest.formats) for (const ids of [['phone', 'wallet', 'lamp'], ['lamp', 'pen'], ['lamp', 'vase']]) {
+  const res = C.compose(ids, fmt, manifest, layouts);
+  const lamp = res.objects.find((o) => o.id === 'lamp');
+  const src = layouts.find((l) => l.format.join() === fmt.join() && l.objects.some((o) => o.id === 'lamp')).objects.find((o) => o.id === 'lamp');
+  assert.deepEqual([lamp.state, lamp.x, lamp.y], ['background', src.x, src.y], `${ids} ${fmt}`);
+  assert(res.objects.some((o) => o.state === 'main'), `${ids} ${fmt}: нет главного`);
+}
 
 // Перекраска не даёт объектный цвет фоновому объекту.
 assert.throws(() => C.paint('{bg1}', C.rolesOf(palettes.schemes[0], palettes), { bg1: 'obj1' }, true));
