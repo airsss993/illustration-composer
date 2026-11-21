@@ -16,10 +16,12 @@ node server.mjs
 
 Открыть http://localhost:8080. Порт меняется аргументом: `node server.mjs 3000`.
 
-Сценарий 1 разбирает модель Gemini, если задан ключ: `GEMINI_API_KEY=... node server.mjs`.
-Модели задаются через `GEMINI_MODEL` списком через запятую, пробуются по очереди при перегрузке или квоте
-(по умолчанию `gemini-3.8-flash,gemini-3.5-flash,gemini-flash-latest`). Запросы к Gemini идут
-через `curl`, поэтому прокси задаётся его переменной `ALL_PROXY` (например `socks5h://host:port`).
+Сценарий 1 разбирает языковая модель через любой OpenAI-совместимый API, если задан ключ:
+`LLM_API_KEY=... node server.mjs`. Адрес - `LLM_BASE_URL` (по умолчанию `https://taynik.store/v1`,
+подойдёт и `https://generativelanguage.googleapis.com/v1beta/openai` для ключа Google), модели -
+`LLM_MODELS` через запятую, пробуются по очереди при перегрузке или квоте (по умолчанию
+`gemini-3.8-flash,orig/claude-haiku-5-5`). Запрос идёт через `curl`, прокси при необходимости
+задаётся его переменной `ALL_PROXY` (например `socks5h://host:port`).
 Без ключа фразу разбирает локальный словарь ассоциаций.
 
 В docker: `docker build -t illustration-composer .`, затем `docker run --env-file .env -p 8080:8080 illustration-composer`.

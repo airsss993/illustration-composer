@@ -111,7 +111,7 @@ $('#byMetaphor').onsubmit = async (e) => {
   const ai = await askModel(q);
   button.disabled = false;
   apply(ai?.ids ?? C.parseMetaphor(q), 'metaphor');
-  if (ai) say(`${$('#status').textContent} Gemini: ${ai.reason}`);
+  if (ai) say(`${$('#status').textContent} ${ai.model}: ${ai.reason}`);
   else if ($('#status').textContent.startsWith('Собрано')) say(`${$('#status').textContent} Разбор словарём.`);
 };
 $('#byNames').onsubmit = (e) => {
