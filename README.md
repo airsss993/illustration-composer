@@ -20,7 +20,7 @@ node server.mjs
 `LLM_API_KEY=... node server.mjs`. Адрес - `LLM_BASE_URL` (по умолчанию `https://taynik.store/v1`,
 подойдёт и `https://generativelanguage.googleapis.com/v1beta/openai` для ключа Google), модели -
 `LLM_MODELS` через запятую, пробуются по очереди при перегрузке или квоте (по умолчанию
-`gemini-3.8-flash,orig/claude-haiku-5-5`). Запрос идёт через `curl`, прокси при необходимости
+`orig/claude-haiku-5-5,gemini-3.8-flash`). Запрос идёт через `curl`, прокси при необходимости
 задаётся его переменной `ALL_PROXY` (например `socks5h://host:port`).
 Без ключа фразу разбирает локальный словарь ассоциаций.
 

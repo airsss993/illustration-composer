@@ -17,7 +17,7 @@ const ALLOWED = ['web', 'library', 'examples'];
 // (https://generativelanguage.googleapis.com/v1beta/openai). Модели пробуются по очереди.
 const KEY = process.env.LLM_API_KEY;
 const BASE = (process.env.LLM_BASE_URL ?? 'https://taynik.store/v1').replace(/\/$/, '');
-const MODELS = (process.env.LLM_MODELS ?? 'gemini-3.8-flash,orig/claude-haiku-5-5').split(',').map((m) => m.trim()).filter(Boolean);
+const MODELS = (process.env.LLM_MODELS ?? 'orig/claude-haiku-5-5,gemini-3.8-flash').split(',').map((m) => m.trim()).filter(Boolean);
 const OBJECTS = JSON.parse(readFileSync(join(ROOT, 'library/manifest.json'), 'utf8')).objects
   .filter((o) => o.size === 'L').map((o) => ({ id: o.id, names: o.names }));
 const IDS = OBJECTS.map((o) => o.id);
