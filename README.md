@@ -10,7 +10,7 @@
 - [docs/RULES.md](docs/RULES.md) - правила библиотеки, что можно и нельзя, как сервис это соблюдает, открытые вопросы
 - [docs/LIBRARY.md](docs/LIBRARY.md) - библиотека по файлу Figma: объекты, id узлов, палитры, что выгружено
 - [examples/](examples/) - 12 эталонных композиций в PNG (в Figma их 18, ещё формат 1200x630)
+- [library/](library/) - SVG объектов и `palettes.json`; выгружено 8 объектов из 40, статус в docs/LIBRARY.md
 
 Исходник библиотеки - файл Figma "Тестовое | иллюстрации",
-ключ `4MCFttsSoP7hgQh29zq5G3`, узел `26:11440`.
-- [library/](library/) - SVG объектов и `palettes.json`; выгружено 8 объектов из 40, статус в docs/LIBRARY.md
+ключ `4MCFttsSoP7hgQh29zq5G3`. Читается через копию `2FainuemKZkOmg7kHyowFN`.
